@@ -71,4 +71,5 @@ def unbook(id):
     return redirect("/dashboard")
 
 print(app.url_map)
-app.run(debug=True)
+
+app.run(host="0.0.0.0", port=10000)
