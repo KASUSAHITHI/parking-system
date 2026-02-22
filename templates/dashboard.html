@@ -1,84 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Parking Dashboard</title>
     <style>
         body {
             font-family: Arial;
-            background-color: #eef;
+            background: #f2f2f2;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        h2 {
             text-align: center;
         }
-        .card {
-            display: inline-block;
-            padding: 20px;
-            margin: 10px;
-            border-radius: 10px;
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .box {
+            padding: 10px;
+            border-radius: 8px;
             color: white;
         }
         .available { background: green; }
         .occupied { background: red; }
 
-        table {
-            margin: auto;
-            margin-top: 20px;
-            border-collapse: collapse;
+        input {
+            padding: 8px;
+            width: 60%;
         }
-        th, td {
+        button {
+            padding: 8px;
+        }
+
+        .slot {
+            margin: 10px 0;
             padding: 10px;
-            border: 1px solid black;
+            border-bottom: 1px solid #ccc;
         }
+
         a {
             text-decoration: none;
-            color: white;
             padding: 5px 10px;
-            background: blue;
+            border-radius: 5px;
+            color: white;
         }
+
+        .book { background: green; }
+        .unbook { background: red; }
     </style>
 </head>
+
 <body>
 
-<h2>Parking Dashboard</h2>
+<div class="container">
+    <h2>🚗 Parking Dashboard</h2>
 
-<div class="card available">
-    Available Slots: {{ available }}
-</div>
+    <div class="stats">
+        <div class="box available">Available: {{ available }}</div>
+        <div class="box occupied">Occupied: {{ occupied }}</div>
+    </div>
 
-<div class="card occupied">
-    Occupied Slots: {{ occupied }}
-</div>
+    <h3>Add Slot</h3>
+    <form method="POST" action="/add">
+        <input type="text" name="slot" placeholder="Enter slot number" required>
+        <button type="submit">Add</button>
+    </form>
 
-<h3>Add Slot</h3>
-<form action="/add" method="POST">
-    <input type="text" name="slot" placeholder="Slot Number">
-    <button type="submit">Add</button>
-</form>
+    <h3>All Slots</h3>
 
-<h3>All Slots</h3>
+    {% for slot in slots %}
+    <div class="slot">
+        {{ slot[1] }} - {{ slot[2] }}
 
-<table>
-<tr>
-    <th>ID</th>
-    <th>Slot</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
-
-{% for slot in slots %}
-<tr>
-    <td>{{ slot[0] }}</td>
-    <td>{{ slot[1] }}</td>
-    <td>{{ slot[2] }}</td>
-    <td>
         {% if slot[2] == 'Available' %}
-            <a href="/book/{{ slot[0] }}">Book</a>
+            <a class="book" href="/book/{{ slot[0] }}">Book</a>
         {% else %}
-            <a href="/unbook/{{ slot[0] }}">Unbook</a>
+            <a class="unbook" href="/unbook/{{ slot[0] }}">Unbook</a>
         {% endif %}
-    </td>
-</tr>
-{% endfor %}
+    </div>
+    {% endfor %}
 
-</table>
+</div>
 
 </body>
 </html>
